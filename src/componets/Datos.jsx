@@ -7,6 +7,7 @@ export function Datos() {
   const [archivoPalabrasParada, setarchivoPalabrasParada] = useState();
   const [archivoLematizacion, setarchivoLematizacion] = useState();
 
+  const [errorArchivo, setErrorArchivo] = useState("");
 
   const value = useContext(DataContext);
 
@@ -19,6 +20,9 @@ export function Datos() {
         </p>
       </div>
       <div className="grid place-content-center">
+        <p className="font-mono font-bold text-white text-xl p-4 grid place-content-center">
+        Documento.
+        </p>
       {/*Lectura del archivo*/}
         <input
           type="file"
@@ -48,6 +52,9 @@ export function Datos() {
             else setarchivoDocumentos(undefined);
           }}
         />
+        <p className="font-mono font-bold text-white text-xl p-4 grid place-content-center">
+        Stop-words.
+        </p>
         <input
           type="file"
           className="
@@ -76,6 +83,9 @@ export function Datos() {
             else setarchivoPalabrasParada(undefined);
           }}
         />
+        <p className="font-mono font-bold text-white text-xl p-4 grid place-content-center">
+        Corpus.
+        </p>
         <input
           type="file"
           className="
@@ -105,6 +115,13 @@ export function Datos() {
           }}
         />
       </div>
+      <div>
+        {/*Mostrar errores */}
+        <p className="
+        text-center text-red-400 rounded-md">
+        <br/> {errorArchivo} <br/>
+        </p>
+      </div>
       <div className="grid place-content-center">
       <button
           className="
@@ -132,8 +149,15 @@ export function Datos() {
               let tf = TF(datos.matriz);
               let idf = IDF(datos.matriz);
               let tfIdf = TFIDF(tf, idf);
-              let ParesCosenos = GenerarParesCoseno(tfIdf);
-              console.log(ParesCosenos);
+
+              let palabraDocumento = PalabrasPorDocumento(datos.matriz)
+
+              value.setCosenos(GenerarParesCoseno(tfIdf))
+
+              let resultado = Resultado(palabraDocumento, datos.terminos, tf, idf, tfIdf)
+              console.log(resultado)
+
+              value.setResultado(resultado)
             }
           }}
         >
@@ -176,7 +200,8 @@ function Lematizar(documentos, lematizacion) {
   return documentos
 }
 
-
+// Creamos una matriz que en las columnas se encuentren las palabras de los
+// documentos y en las filas los documentos.
 function MatrizTerminoDocumento(documentoFiltrado) {
   
   // Sacamos todas las palabras.
@@ -207,7 +232,7 @@ function MatrizTerminoDocumento(documentoFiltrado) {
     matriz.push(auxMatriz);
   }
 
-  return {documentoFiltrado, terminos, matriz}
+  return {terminos, matriz}
 }
 
 
@@ -275,13 +300,51 @@ function distanciaCoseno(documento1, documento2) {
   return numerador / (Math.sqrt(denominador1) * Math.sqrt(denominador2));
 }
 
-
+// Calculamos los pares de Cosenos
 function GenerarParesCoseno (TF_IDF) {
   let paresCoseno = []
   for(let i = 0; i < TF_IDF.length; i++) {
     for (let j = i + 1; j < TF_IDF.length; j++) {
-      paresCoseno.push([(i + 1).toString() + "-" + (j + 1).toString(), distanciaCoseno(TF_IDF[i], TF_IDF[j])]);
+      paresCoseno.push("Par " + (i + 1).toString() + "-" + (j + 1).toString() + ": " + distanciaCoseno(TF_IDF[i], TF_IDF[j]));
     }
   }
   return paresCoseno
+}
+
+// Para cada documento sacamos el indice de las palabras que lo forman
+function PalabrasPorDocumento (matriz) {
+  let palabrasDocumento = []
+
+  for (let i = 0; i < matriz.length; i++) {
+    let aux = []
+    for (let j = 0; j < matriz[i].length; j++) {
+      if (matriz[i][j] > 0) {
+        aux.push(j)
+      }
+    }
+    palabrasDocumento.push(aux);
+  }
+
+  return palabrasDocumento
+}
+
+// generamos lo que se va a imprimir
+function Resultado(palabrasDocumento, terminos, tf, idf, tf_idf) {
+  let resultado = []
+
+  for (let i = 0; i < palabrasDocumento.length; i++) {
+    let documento = []
+    for (let j = 0; j < palabrasDocumento[i].length; j++) {
+      let aux = []
+      aux.push(j + 1)
+      aux.push(terminos[palabrasDocumento[i][j]])
+      aux.push(tf[i][palabrasDocumento[i][j]])
+      aux.push(idf[palabrasDocumento[i][j]])
+      aux.push(tf_idf[i][palabrasDocumento[i][j]])
+
+      documento.push(aux)
+    }
+    resultado.push(documento);
+  }
+  return resultado
 }
