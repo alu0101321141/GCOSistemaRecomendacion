@@ -150,14 +150,8 @@ export function Datos() {
               let idf = IDF(datos.matriz);
               let tfIdf = TFIDF(tf, idf);
 
-              let palabraDocumento = PalabrasPorDocumento(datos.matriz)
-
               value.setCosenos(GenerarParesCoseno(tfIdf))
-
-              let resultado = Resultado(palabraDocumento, datos.terminos, tf, idf, tfIdf)
-              console.log(resultado)
-
-              value.setResultado(resultado)
+              value.setResultado(Resultado(PalabrasPorDocumento(datos.matriz), datos.terminos, tf, idf, tfIdf))
             }
           }}
         >
@@ -305,7 +299,7 @@ function GenerarParesCoseno (TF_IDF) {
   let paresCoseno = []
   for(let i = 0; i < TF_IDF.length; i++) {
     for (let j = i + 1; j < TF_IDF.length; j++) {
-      paresCoseno.push("Par " + (i + 1).toString() + "-" + (j + 1).toString() + ": " + distanciaCoseno(TF_IDF[i], TF_IDF[j]));
+      paresCoseno.push("Par " + (i + 1).toString() + "-" + (j + 1).toString() + ": " + distanciaCoseno(TF_IDF[i], TF_IDF[j]).toFixed(4));
     }
   }
   return paresCoseno
@@ -338,9 +332,9 @@ function Resultado(palabrasDocumento, terminos, tf, idf, tf_idf) {
       let aux = []
       aux.push(j + 1)
       aux.push(terminos[palabrasDocumento[i][j]])
-      aux.push(tf[i][palabrasDocumento[i][j]])
-      aux.push(idf[palabrasDocumento[i][j]])
-      aux.push(tf_idf[i][palabrasDocumento[i][j]])
+      aux.push(tf[i][palabrasDocumento[i][j]].toFixed(4))
+      aux.push(idf[palabrasDocumento[i][j]].toFixed(4))
+      aux.push(tf_idf[i][palabrasDocumento[i][j]].toFixed(4))
 
       documento.push(aux)
     }

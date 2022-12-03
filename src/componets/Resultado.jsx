@@ -7,21 +7,29 @@ export function Resultado() {
 
   // Mostrar los pares de cosenos
   const cosenos = value.cosenos.map((cadena) => 
-    <text>{cadena}<br/></text>
+    <p>{cadena}<br/></p>
     );
 
   const tablas = value.resultado.map((documento, index) =>
     <>
-      <text>Documento {index + 1}<br></br></text>
+      <p className="pt-8 pb-4">Documento {index + 1}<br></br></p>
       <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+      <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+        <td className= "py-4 px-6 text-xl">Índice</td>
+        <td className= "py-4 px-6 text-xl">Término</td>
+        <td className= "py-4 px-6 text-xl">TF</td>
+        <td className= "py-4 px-6 text-xl">IDF</td>
+        <td className= "py-4 px-6 text-xl">TF-IDF</td>
+      </tr>
         {documento.map((fila) =>
           <>
-            <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"></tr>
+            <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
             {fila.map((elemento) =>
               <td className= "py-4 px-6">
               {elemento}
               </td>
             )}
+            </tr>
           </>
         )}
       </table>
@@ -38,6 +46,7 @@ export function Resultado() {
           <div className="max-w-3xl  max-h-screen overflow-x-auto sm:rounded-lg">
             {tablas}
           </div>
+          <hr className="my-8 h-1 bg-gray-200 rounded border-0 dark:bg-gray-700 grid"/>
           <p className="font-mono font-bold text-xl"><br/>Similaridad coseno entre cada par de documentos</p>
           <p>{cosenos}</p>
         </div>
