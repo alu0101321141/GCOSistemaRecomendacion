@@ -200,6 +200,10 @@ function MatrizTerminoDocumento(documentoFiltrado) {
   
   // Sacamos todas las palabras.
   let terminos = documentoFiltrado.replaceAll("\n", " ").split(" ")
+
+  for (let i = 0; i < terminos.length; i++) {
+    terminos[i] = terminos[i].trim()
+  }
   // Eliminamos las repetidas
   let conjunto = new Set(terminos)
   // Creamos de nuevo el array.
@@ -216,7 +220,7 @@ function MatrizTerminoDocumento(documentoFiltrado) {
     let auxMatriz = [];
     for (let j = 0; j < terminos.length; j++) {
       for (let k = 0; k < auxDocumento.length; k++) {
-        if (auxDocumento[k] === terminos[j]) {
+        if (auxDocumento[k].trim() === terminos[j]) {
           contador ++;
         }
       }
@@ -325,6 +329,8 @@ function PalabrasPorDocumento (matriz) {
 // generamos lo que se va a imprimir
 function Resultado(palabrasDocumento, terminos, tf, idf, tf_idf) {
   let resultado = []
+  console.log(terminos[palabrasDocumento[0][palabrasDocumento[0].length - 1]])
+  console.log(terminos[palabrasDocumento[1][14]])
 
   for (let i = 0; i < palabrasDocumento.length; i++) {
     let documento = []
