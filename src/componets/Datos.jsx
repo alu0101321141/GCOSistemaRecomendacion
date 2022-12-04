@@ -150,7 +150,7 @@ export function Datos() {
               let idf = IDF(datos.matriz);
               let tfIdf = TFIDF(tf, idf);
 
-              value.setCosenos(GenerarParesCoseno(tfIdf))
+              value.setCosenos(GenerarParesCoseno(NormalizarVector(tf, SizeVectores(tf))))
               value.setResultado(Resultado(PalabrasPorDocumento(datos.matriz), datos.terminos, tf, idf, tfIdf))
             }
           }}
@@ -240,7 +240,7 @@ function TF (matriz) {
   for (let i = 0; i < matriz.length; i++) {
     let auxMatrizTF = [];
     for (let j = 0; j < matriz[i].length; j++) {
-      if (matriz[i][j] !== 0)
+      if (matriz[i][j] > 0)
         auxMatrizTF.push(1 + Math.log10(matriz[i][j]));
       else
         auxMatrizTF.push(0);
@@ -259,7 +259,7 @@ function IDF (matriz) {
   for (let j = 0; j < matriz[0].length; j++) {
     let contador = 0
     for (let i = 0; i < matriz.length; i++) {
-      if (matriz[i][j] > 0)
+      if (matriz[i][j] !== 0)
         contador ++
     }
     vectorIDF.push(Math.log10(N/contador));
@@ -284,18 +284,14 @@ function TFIDF (matrizTF, vectorIDF) {
 
 
 // Metrica distancia coseno
-function distanciaCoseno(documento1, documento2) {
-  let numerador = 0,
-    denominador1 = 0,
-    denominador2 = 0;
+function similaridadCoseno(documento1, documento2) {
+  let valor = 0
 
   for (let i = 0; i < documento1.length; i++) {
-    numerador += documento1[i] * documento2[i];
-    denominador1 += Math.pow(documento1[i], 2);
-    denominador2 += Math.pow(documento2[i], 2);
+    valor += documento1[i] * documento2[i]
   }
 
-  return numerador / (Math.sqrt(denominador1) * Math.sqrt(denominador2));
+  return valor
 }
 
 // Calculamos los pares de Cosenos
@@ -303,7 +299,7 @@ function GenerarParesCoseno (TF_IDF) {
   let paresCoseno = []
   for(let i = 0; i < TF_IDF.length; i++) {
     for (let j = i + 1; j < TF_IDF.length; j++) {
-      paresCoseno.push("Par " + (i + 1).toString() + "-" + (j + 1).toString() + ": " + distanciaCoseno(TF_IDF[i], TF_IDF[j]).toFixed(4));
+      paresCoseno.push("Par " + (i + 1).toString() + "-" + (j + 1).toString() + ": " + similaridadCoseno(TF_IDF[i], TF_IDF[j]).toFixed(4));
     }
   }
   return paresCoseno
@@ -347,4 +343,34 @@ function Resultado(palabrasDocumento, terminos, tf, idf, tf_idf) {
     resultado.push(documento);
   }
   return resultado
+}
+
+
+function SizeVectores (tf) {
+  let vector = []
+  
+  for (let i = 0; i < tf.length; i++) {
+    let contador = 0
+    for (let j = 0; j < tf[i].length; j++) {
+      if (tf[i][j] > 0) 
+        contador += Math.pow(tf[i][j], 2)
+    }
+    vector.push(Math.sqrt(contador))
+  }
+
+  return vector
+}
+
+function NormalizarVector (tf, sizeVector) {
+  let vectorNormalizado = []
+
+  for (let i = 0; i < tf.length; i++) {
+    let fila = []
+    for (let j = 0; j < tf[i].length; j++) {
+      fila.push(tf[i][j] / sizeVector[i])  
+    }
+    vectorNormalizado.push(fila)
+  }
+
+  return vectorNormalizado
 }
