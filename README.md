@@ -1,9 +1,5 @@
 # Gestión del conocimiento en las organizaciones
-## Sistemas de recomendación. Métodos de Filtrado Colaborativo
----
-### Despliegue de la aplicación web:
-En el siguiente enlace se puede ver la aplicación desarrolla desplegada utilizando Vercel.
-[Despliegue de la web](https://gco-deploy.vercel.app/)
+## Sistemas de recomendación. Modelos Basados en el Conocimiento.
 
 ---
 ### Autores:
