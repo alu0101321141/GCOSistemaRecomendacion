@@ -15,14 +15,13 @@ En el siguiente enlace se puede ver la aplicación desarrolla desplegada utiliza
 
 ### Introducción
 
-En la práctica se nos propone implementar un sistema de recomendación siguiendo el método de filtrado colaborativo. 
+En la práctica se nos propone implementar un sistema de recomendación siguiendo modelos basados en el conocimiento. 
 
 Para ello se desarolló una aplicación web en la que tendremos los siguientes elementos
 
-* Obtener de un archivo la matriz con los datos de los items y usuarios.
-* Multiopción para elegir el tipo de métrica a utilizar.
-* Número de vecinos considerado.
-* Tipos de predicción a utilizar.
+* Tendremos 3 ficheros a tener en cuenta: El archivo de documentos a analizar, el archivo de palabras de paradas y el de lematizacion.
+* Se normalizaran los daatos del fichero de documentos a analizar, convirtiendo todas las palabras en minúsculas y quitando signos de puntuación.
+* Una vez que tenemos el formato correcto procederemos con las transformaciones correspondientes, eliminando las palabras de parada y lematizando el texto.
 
 ---
 
@@ -55,42 +54,35 @@ Para el desarrollo de la práctica se utilizaron las siguientes herramientas:
 * __Datos.jsx:__ En este fichero estarán todos nuestros componentes en lo referente a la toma inicial de datos, un ejemplo sería:
 
 ```js
-        <select
-          className="
-          bg-gradient-to-br from-slate-50 to-slate-400
-          m-2 h-8
-          rounded-md
-          text-center
-          cursor-pointer
-          shadow-xl shadow-gray-700/60
-          "
+        <input
+          type="file"
+          className="..."
+          accept=".txt"
           onChange={(e) => {
-            setMetrica(e.target.value);
+            let file = new FileReader();
+            file.onload = () => {
+              setarchivoPalabrasParada(file.result);
+            };
+            if (e.target.files[0]) file.readAsText(e.target.files[0]);
+            else setarchivoPalabrasParada(undefined);
           }}
-        >
-          <option>Correlación de Pearson.</option>
-          <option>Distancia coseno.</option>
-          <option>Distancia Euclídea.</option>
-        </select>
+        />
+        <p className="font-mono font-bold text-white text-xl p-4 grid place-content-center">
+        Corpus.
+        </p>
+        <input
+
 ```
 
-Adicionalmente, podemos destacar la presencia de funciones fundamentales para el procesado de dichos datos como:
+Además, en este componente procesaremos los datos asociados, realizando las transformaciones indicadas en la traducción y calculando:
 
-> `function formateoMatriz()`: Se encarga del formateo de la matriz introducidad por el input file correspondiente, estos se pueden encontrar en: [matrices de prueba](./examples-utility-matrices/) 
+* Frecuencia ponderada del término: `function TF (matriz)`
+* Inversa de la frecuencia. `function IDF (matriz)`
+* TF-IDF: `function IDF (matriz)`
+* Similaridad coseno entre cada par de documentos: `function similaridadCoseno(documento1, documento2)`
 
-> `function generarVecinos()`: Genera los vecinos de cada elemento teniendo en cuenta que si alguno de los vecinos tiene una incógnita se descarta.
 
-> `function calcularIndexMejoresVecinos()`: Se encarga de calcular los índices de los mejores vecinos. 
-
-> `function calcularMedia()`: Calcula la media dado un vector sin tener en cuenta los valores nulos.
-
-> `function prediccionSimpleMedia()`: Se encarga de calcular la predicción dependiendo del valor seleccionado, ya sea simple o cáculo con la media.
-
-> `function resolverIncognitas()`: Resuelve las incógnitas de nuestra matriz inicial. 
-
-> Dentro del cálculo final tenemos distintas posibles métricas y para ello tenemos las 3 funciones correspondientes a cada una: `distanciaEuclidiana()` `distanciaCoseno()` `correlacionPearson()`
-
-* __Resultado.jsx:__ En este fichero nos centramos en la muestra de resultados después del cálculo realizado anteriormente.
+* __Resultado.jsx:__  En este componente nos centramos en la muestra de resultados después del cálculo realizado. A continuación se pueden ver algunas imágenes de la visualización de dichos resultados:
 
 ---
 
@@ -99,20 +91,6 @@ En la siguiente imagen se puede ver la aplicación web nada más acceder a ella.
 
 ![Imagen web inicio](/img/inicio.png)
 
-La aplicación se divide en diferentes partes:
-1. En la zona del recuadro naranja podemos seleccionar las diferentes matrices.
-2. En la zona de los recuadros amarillos selecionaremos el mayor valor de nuestros datos, el menor y el número de vecinos que utilizaremos para las predicciones.
-3. En la zona del recuadro azul seleccionaremos la metrica a utilizar.
-4. En la zona del recuadro rojo seleccionaremos la predicción a utilizar.
-5. En la zona del recuadro rosado ejecutaremos el filtrado colaborativo.
-
-Una vez ejecutado el filtrado colaborativo nuestra página se extenderá hacia abajo mostrando la información que podemos ver en la siguiente imagen.
+Una vez se ejecuta correctamente tenemos el siguiente reultado:
 
 ![Imagen web datos](/img/datos.png)
-
-La imagen anterior se devide en 2 partes:
-1. En la zona del recuadro morado podemos ver la matriz introducida anteriormente rellena con los resultados del filtrado colaborativo.
-2. En la zona del recuadro marrón podemos ver diferente información, entre ella se encuentra: 
-    - La similaridad entre cada usuario y sus vecinos de acuerdo a la métrica elegida.
-    - Los vecinos seleccionados en el proceso de predicción.
-    - El cálculo de cada predicción de la matriz de utilidad en base a los vecinos seleccionados.

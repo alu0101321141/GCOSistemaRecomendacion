@@ -126,7 +126,7 @@ export function Datos() {
       <button
           className="
           bg-gradient-to-b from-blue-500 to-blue-600
-          px-6 py-6 m-5
+          px-6 py-3 m-5
           border-none
           rounded-full
           font-mono font-bold text-white text-xl
