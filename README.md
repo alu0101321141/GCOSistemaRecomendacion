@@ -23,6 +23,7 @@ Para ello se desarolló una aplicación web en la que tendremos los siguientes e
 ### Deployment
 
 Se puede ver la aplicación en el siguiente [enlace](https://gco-sistema-recomendacion-raj1ht1ym-alu0101321141.vercel.app/).
+
 ---
 
 ### Herramientas 
