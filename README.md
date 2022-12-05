@@ -20,6 +20,10 @@ Para ello se desarolló una aplicación web en la que tendremos los siguientes e
 * Una vez que tenemos el formato correcto procederemos con las transformaciones correspondientes, eliminando las palabras de parada y lematizando el texto.
 
 ---
+### Deployment
+
+Se puede ver la aplicación en el siguiente [enlace](https://gco-sistema-recomendacion-raj1ht1ym-alu0101321141.vercel.app/).
+---
 
 ### Herramientas 
 
