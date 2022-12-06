@@ -88,7 +88,7 @@ Además, en este componente procesaremos los datos asociados, realizando las tra
 ---
 
 ### Ejemplo de uso
-En la siguiente imagen se puede ver la aplicación web nada más acceder a ella.
+En la siguiente imagen se puede ver la aplicación web nada más acceder a ella. Lo primero que tendremos que hacer es introducir los documentos necesarios, una vez los hayamos introducido hacemos click en el botón de mostrar.
 
 ![Imagen web inicio](/img/inicio.png)
 
